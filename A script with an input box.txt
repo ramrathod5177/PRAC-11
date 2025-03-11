@@ -1,0 +1,41 @@
+Q16) A script with an input box where the user can specify the number of minutes after which the system should shut down.
+#include <GUIConstantsEx.au3>
+ 
+; Create GUI
+$gui = GUICreate("Custom Shutdown Timer", 300, 150)
+GUICtrlCreateLabel("Enter shutdown time in minutes:", 20, 20, 250, 20)
+$input = GUICtrlCreateInput("", 20, 50, 100, 20)
+$shutdownButton = GUICtrlCreateButton("Schedule Shutdown", 20, 90, 120, 30)
+$cancelButton = GUICtrlCreateButton("Cancel Shutdown", 150, 90, 120, 30)
+ 
+GUISetState(@SW_SHOW)
+ 
+While 1
+    $msg = GUIGetMsg()
+    Select
+        Case $msg = $GUI_EVENT_CLOSE
+            ExitLoop
+ 
+        Case $msg = $shutdownButton
+            ; Get the input time and validate
+            $minutes = GUICtrlRead($input)
+            If StringIsInt($minutes) And $minutes > 0 Then
+                ; Convert minutes to seconds
+                $seconds = $minutes * 60
+                ; Schedule shutdown
+                Run(@ComSpec & " /c shutdown -s -t " & $seconds, "", @SW_HIDE)
+                MsgBox(64, "Shutdown Scheduled", "System will shut down in " & $minutes & " minute(s).")
+            Else
+                MsgBox(16, "Invalid Input", "Please enter a valid positive integer.")
+            EndIf
+ 
+        Case $msg = $cancelButton
+            ; Cancel any scheduled shutdown
+            Run(@ComSpec & " /c shutdown -a", "", @SW_HIDE)
+            MsgBox(64, "Shutdown Cancelled", "Any scheduled shutdown has been canceled.")
+    EndSelect
+WEnd
+ 
+; Cleanup
+GUIDelete($gui)
+Exit

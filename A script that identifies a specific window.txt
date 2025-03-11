@@ -1,0 +1,29 @@
+Q6) A script that identifies a specific window (e.g., Notepad) by its title and resizes it to specific dimensions (e.g., 800x600 pixels).
+ 
+; Script to open Notepad, identify the window, and resize it
+ 
+; Define the window title and dimensions
+Local $windowTitle = "Untitled - Notepad"
+Local $width = 800
+Local $height = 600
+ 
+; Run Notepad
+Run("notepad.exe")
+ 
+; Wait for the Notepad window to exist
+If WinWait($windowTitle, "", 5) Then ; Wait up to 5 seconds for the window to appear
+    ; Activate the window
+    WinActivate($windowTitle)
+    
+    ; Wait for the window to become active
+    WinWaitActive($windowTitle)
+    
+    ; Resize the window
+    WinMove($windowTitle, "", Default, Default, $width, $height)
+    
+    ; Display a success message
+    MsgBox(0, "Success", "Notepad has been opened and resized to " & $width & "x" & $height & ".")
+Else
+    ; If the window doesn't exist, show an error message
+    MsgBox(16, "Error", "The Notepad window could not be opened or found.")
+EndIf\

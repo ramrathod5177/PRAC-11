@@ -1,0 +1,33 @@
+Q10) Window focus checker
+Write a script that constantly checks which window is currently active and logs the window titles to a text file.
+ 
+; Script to log the titles of currently active windows to a text file
+ 
+; Define the output log file
+Global $logFile = @ScriptDir & "\ActiveWindowsLog.txt"
+ 
+; Open the log file for appending
+FileWrite($logFile, "--- Active Window Logger Started: " & @YEAR & "/" & @MON & "/" & @MDAY & " " & @HOUR & ":" & @MIN & ":" & @SEC & " ---" & @CRLF)
+ 
+; Variable to store the last window title to avoid duplicate logging
+Global $lastTitle = ""
+ 
+While True
+    ; Get the handle of the currently active window
+    $activeWindowHandle = WinGetHandle("[ACTIVE]")
+ 
+    ; Get the title of the currently active window
+    $activeWindowTitle = WinGetTitle($activeWindowHandle)
+ 
+    ; Check if the title has changed and is not empty
+    If $activeWindowTitle <> $lastTitle And $activeWindowTitle <> "" Then
+        ; Log the new window title with a timestamp
+        FileWrite($logFile, @YEAR & "/" & @MON & "/" & @MDAY & " " & @HOUR & ":" & @MIN & ":" & @SEC & " - " & $activeWindowTitle & @CRLF)
+ 
+        ; Update the last title
+        $lastTitle = $activeWindowTitle
+    EndIf
+ 
+    ; Wait for a short interval before checking again
+    Sleep(500)
+Wend

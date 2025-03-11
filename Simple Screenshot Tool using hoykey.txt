@@ -1,0 +1,33 @@
+Q3) Simple Screenshot Tool Write a script that takes a screenshot when a specific hotkey (e.g., Print Screen) is pressed and saves it to a predefined folder with a timestamp in the filename.
+ 
+ 
+#include <Date.au3>
+ 
+HotKeySet("{PRINTSCREEN}", "CaptureScreenshot") ; Assign PrintScreen as the hotkey
+ 
+Func CaptureScreenshot()
+    ; Define the save folder
+    Local $saveFolder = @ScriptDir & "\Screenshots\"  ; Saves in a "Screenshots" folder next to the script
+ 
+    ; Create the folder if it doesn’t exist
+    If Not FileExists($saveFolder) Then DirCreate($saveFolder)
+ 
+    ; Get current timestamp for the filename
+    Local $timestamp = _Now()
+    $timestamp = StringReplace($timestamp, "/", "-")
+    $timestamp = StringReplace($timestamp, ":", "-")
+    $timestamp = StringReplace($timestamp, " ", "_")
+ 
+    ; Define the file path
+    Local $filePath = $saveFolder & "Screenshot_" & $timestamp & ".png"
+ 
+    ; Capture the entire screen and save it
+    _ScreenCapture_Capture($filePath)
+ 
+    ; Notify the user
+    TrayTip("Screenshot Captured", "Saved as: " & $filePath, 3)
+EndFunc
+ 
+While True
+    Sleep(100) ; Keeps the script running
+Wend

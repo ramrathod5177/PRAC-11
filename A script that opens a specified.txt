@@ -1,0 +1,60 @@
+Q8) A script that opens a specified .txt file, reads its contents, and displays them in a message box or GUI.
+ 
+; Script to open a specified .txt file, read its contents, and display them in a GUI
+ 
+#include <GUIConstantsEx.au3> ; Include GUI constants
+ 
+; Define the missing constants manually (if not already defined in your environment)
+Global Const $ES_AUTOVSCROLL = 0x0040
+Global Const $ES_MULTILINE = 0x0004
+Global Const $WS_VSCROLL = 0x00200000
+ 
+; Define the file to read
+Global $filePath = FileOpenDialog("Select a Text File", @ScriptDir, "Text Files (*.txt)", 1)
+ 
+; Check if the user selected a file
+If @error Then
+    MsgBox(16, "Error", "No file selected. Exiting script.")
+    Exit
+EndIf
+ 
+; Open the file for reading
+Local $fileHandle = FileOpen($filePath, 0)
+ 
+; Check if the file was opened successfully
+If $fileHandle = -1 Then
+    MsgBox(16, "Error", "Failed to open the file. Exiting script.")
+    Exit
+EndIf
+ 
+; Read the file contents
+Local $fileContents = FileRead($fileHandle)
+ 
+; Close the file
+FileClose($fileHandle)
+ 
+; Check if the file is empty
+If $fileContents = "" Then
+    MsgBox(48, "Info", "The file is empty.")
+    Exit
+EndIf
+ 
+; Create a GUI to display the file contents
+Local $gui = GUICreate("File Contents Viewer", 600, 400)
+Local $edit = GUICtrlCreateEdit($fileContents, 10, 10, 580, 380, BitOR($ES_AUTOVSCROLL, $ES_MULTILINE, $WS_VSCROLL))
+GUICtrlSetFont($edit, 10, 400, 0, "Consolas")
+ 
+; Show the GUI
+GUISetState(@SW_SHOW, $gui)
+ 
+; Wait for the user to close the GUI
+While True
+    Switch GUIGetMsg()
+        Case $GUI_EVENT_CLOSE
+            ExitLoop
+    EndSwitch
+WEnd
+ 
+; Clean up and exit
+GUIDelete($gui)
+Exit

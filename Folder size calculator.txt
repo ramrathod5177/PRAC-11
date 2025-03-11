@@ -1,0 +1,54 @@
+Q12)  Folder size calculator  Write a script that calculates the total size of a specified folder and displays the result in a message box. 
+ 
+#include <File.au3>
+ 
+; Prompt user to select a folder
+Global $folderPath = FileSelectFolder("Select a Folder", "")
+ 
+; Check if the user selected a folder
+If @error Then
+    MsgBox(16, "Error", "No folder selected. Exiting script.")
+    Exit
+EndIf
+ 
+; Function to calculate folder size
+Func GetFolderSize($sFolder)
+    Local $iSize = 0
+    Local $aFileList = _FileListToArray($sFolder, "*", 1)
+    
+    If IsArray($aFileList) Then
+        For $i = 1 To $aFileList[0]
+            $iSize += FileGetSize($sFolder & "\" & $aFileList[$i])
+        Next
+    EndIf
+    
+    Local $aFolderList = _FileListToArray($sFolder, "*", 2)
+    
+    If IsArray($aFolderList) Then
+        For $i = 1 To $aFolderList[0]
+            $iSize += GetFolderSize($sFolder & "\" & $aFolderList[$i])
+        Next
+    EndIf
+    
+    Return $iSize
+EndFunc
+ 
+; Get the total size of the selected folder
+Local $totalSize = GetFolderSize($folderPath)
+ 
+; Convert size to human-readable format
+Func ConvertSize($size)
+    If $size < 1024 Then
+        Return $size & " Bytes"
+    ElseIf $size < 1048576 Then
+        Return Round($size / 1024, 2) & " KB"
+    ElseIf $size < 1073741824 Then
+        Return Round($size / 1048576, 2) & " MB"
+    Else
+        Return Round($size / 1073741824, 2) & " GB"
+    EndIf
+EndFunc
+ 
+; Display the result
+MsgBox(64, "Folder Size", "The total size of the folder is: " & ConvertSize($totalSize))
+ 

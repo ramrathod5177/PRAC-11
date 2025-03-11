@@ -1,0 +1,31 @@
+Q13) Window Title Logger Develop a script that runs in the background and logs the titles of all the windows that the user switches to, saving the log to a text file
+ 
+; Include the Date UDF
+#include <Date.au3>
+ 
+; Path to the log file
+Global $logFile = @ScriptDir & "\window_titles_log.txt"
+ 
+; Initialize the log file (create or overwrite)
+FileDelete($logFile)  ; Delete the file if it exists
+FileWrite($logFile, "Window Title Log: " & @CRLF)
+ 
+; Variable to store the previous window title
+Global $lastWindowTitle = ""
+ 
+While 1
+    ; Get the title of the currently active window
+    $currentWindowTitle = WinGetTitle("[ACTIVE]")
+    
+    ; If the window title has changed, log it
+    If $currentWindowTitle <> $lastWindowTitle And $currentWindowTitle <> "" Then
+        ; Log the new window title with a timestamp
+        FileWrite($logFile, "[" & _NowCalc() & "] " & $currentWindowTitle & @CRLF)
+        
+        ; Update the last window title
+        $lastWindowTitle = $currentWindowTitle
+    EndIf
+    
+    ; Sleep for a short period to avoid high CPU usage
+    Sleep(100)
+Wend

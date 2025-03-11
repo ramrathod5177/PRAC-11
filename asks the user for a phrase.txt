@@ -1,0 +1,28 @@
+Q11) A script that asks the user for a phrase and a number, then repeatedly types the phrase that many times into any open application.
+ 
+;; AutoIt script to repeatedly type a phrase into an open application
+ 
+#include <MsgBoxConstants.au3>
+#include <GUIConstantsEx.au3>
+ 
+Global $phrase = InputBox("Auto Typer", "Enter the phrase to type:")
+If @error Then Exit ; Exit if the user cancels
+ 
+Global $repeat = InputBox("Auto Typer", "Enter the number of times to repeat:", "10")
+If @error Then Exit ; Exit if the user cancels
+ 
+If Not StringIsDigit($repeat) Or $repeat < 1 Then
+    MsgBox($MB_ICONERROR, "Error", "Please enter a valid number.")
+    Exit
+EndIf
+ 
+MsgBox($MB_ICONINFORMATION, "Instructions", "Switch to the target application and click OK. Typing will start in 3 seconds.")
+ 
+Sleep(3000) ; Wait 3 seconds before starting
+ 
+For $i = 1 To $repeat
+    Send($phrase & "{ENTER}") ; Sends the phrase and presses Enter
+    Sleep(500) ; Short delay to prevent overload
+Next
+ 
+MsgBox($MB_ICONINFORMATION, "Done", "Typing completed!")

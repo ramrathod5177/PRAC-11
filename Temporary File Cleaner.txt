@@ -1,0 +1,33 @@
+Q15)Temporary File Cleaner Write a script that deletes all files in the system's temporary folder and displays a summary of the number of files deleted
+ 
+ 
+; Get the system temporary folder path
+Local $tempFolder = @TempDir
+ 
+; Count the number of files deleted
+Local $deletedCount = 0
+ 
+; Use FileFindFirstFile and FileFindNextFile to delete files
+Local $search = FileFindFirstFile($tempFolder & "\.")
+ 
+; Check if the folder is accessible
+If $search = -1 Then
+    MsgBox(16, "Temporary File Cleaner", "Failed to access the temp folder.")
+    Exit
+EndIf; 
+Loop through the files 
+and delete them
+While 1
+    Local $file = FileFindNextFile($search)
+    If @error Then ExitLoop
+ 
+    If FileDelete($tempFolder & "\" & $file) Then
+        $deletedCount += 1
+    EndIf
+WEnd
+ 
+; Close the search handle
+FileClose($search)
+ 
+; Display a summary of the files deleted
+MsgBox(64, "Temporary File Cleaner", $deletedCount & " files deleted.")

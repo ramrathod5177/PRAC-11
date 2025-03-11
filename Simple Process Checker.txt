@@ -1,0 +1,15 @@
+Q14) Simple Process Checker Create a script that checks if a specific process (e.g., notepad.exe) is running. If it is, display a message; otherwise, start the application.
+ 
+Global $sProcessName = InputBox("Process Checker", "Enter the process name to check (e.g., notepad):")
+If $sProcessName = "" Then
+    MsgBox(48, "Process Checker", "No process name provided. Exiting...")
+    Exit
+EndIf
+If StringRight($sProcessName, 4) <> ".exe" Then
+    $sProcessName &= ".exe"
+EndIf
+If ProcessExists($sProcessName) Then
+    MsgBox(64, "Process Checker", $sProcessName & " is already running.")
+Else
+    MsgBox(48, "Process Checker", $sProcessName & " is not running.")
+EndIf

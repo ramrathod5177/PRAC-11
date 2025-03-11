@@ -1,0 +1,33 @@
+Q9) A script that takes user input (e.g., via an input box or GUI) to specify a folder name. The script should then create the folder in a predefined location.
+ 
+#include <MsgBoxConstants.au3>
+#include <File.au3>
+ 
+; Define the base directory where the folder will be created
+Global $sBaseDir = "C:\MyFolders"
+ 
+; Check if base directory exists, if not, create it
+If Not FileExists($sBaseDir) Then
+    DirCreate($sBaseDir)
+EndIf
+ 
+; Prompt the user to enter a folder name
+Global $sFolderName = InputBox("Create Folder", "Enter the folder name:")
+ 
+; Check if the user entered a name
+If $sFolderName = "" Then
+    MsgBox($MB_ICONWARNING, "Error", "No folder name entered. Exiting...")
+    Exit
+EndIf
+ 
+; Construct the full path of the new folder
+Global $sFolderPath = $sBaseDir & "\" & $sFolderName
+ 
+; Check if the folder already exists
+If FileExists($sFolderPath) Then
+    MsgBox($MB_ICONEXCLAMATION, "Error", "Folder already exists!")
+Else
+    ; Create the folder
+    DirCreate($sFolderPath)
+    MsgBox($MB_ICONINFORMATION, "Success", "Folder '" & $sFolderName & "' created in " & $sBaseDir)
+EndIf
